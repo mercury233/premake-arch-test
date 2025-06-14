@@ -39,6 +39,7 @@ jobs:
     - name: Test official premake beta6
       continue-on-error: true
       run: |
+        lipo -archs ./premake5
         ./premake5
 
     - name: Download premake beta7
@@ -56,6 +57,7 @@ jobs:
     - name: Test official premake beta7
       continue-on-error: true
       run: |
+        lipo -archs ./premake5
         ./premake5
 
     - name: Test patched premake
