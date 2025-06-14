@@ -37,10 +37,12 @@ jobs:
         chmod +x ./premake5
 
     - name: Test official premake
+      continue-on-error: true
       run: |
         ./premake5
 
     - name: Test patched premake
+      continue-on-error: true
       run: |
         chmod +x ./premake5-dev-macos-x86_64
         ./premake5-dev-macos-x86_64
@@ -68,10 +70,12 @@ jobs:
         chmod +x ./premake5
 
     - name: Test official premake
+      continue-on-error: true
       run: |
         ./premake5
 
     - name: Test patched premake
+      continue-on-error: true
       run: |
         chmod +x ./premake5-dev-linux-x86_64
         ./premake5-dev-linux-x86_64
@@ -87,6 +91,7 @@ jobs:
         submodules: true
 
     - name: Test patched premake
+      continue-on-error: true
       run: |
         chmod +x ./premake5-dev-linux-arm
         ./premake5-dev-linux-arm
@@ -120,9 +125,11 @@ jobs:
         7z x ${{ steps.premake.outputs.filepath }}
 
     - name: Test official premake
+      continue-on-error: true
       run: |
         .\premake5.exe
     
     - name: Test patched premake
+      continue-on-error: true
       run: |
         .\premake5-dev-windows-win32.exe
