@@ -1,0 +1,1 @@
+premake with the patch in https://github.com/premake/premake-core/pull/2468#issuecomment-2888556890 , by tritao.

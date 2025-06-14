@@ -1,0 +1,128 @@
+name: Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-13
+          - macos-15
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        submodules: true
+
+    - name: Download premake
+      id: premake
+      uses: mercury233/action-cache-download-file@v1.0.0
+      with:
+        url: https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-macosx.tar.gz
+        filename: premake5.tar.gz
+
+    - name: Extract premake
+      run: |
+        tar xf ${{ steps.premake.outputs.filepath }}
+        chmod +x ./premake5
+
+    - name: Test official premake
+      run: |
+        ./premake5
+
+    - name: Test patched premake
+      run: |
+        chmod +x ./premake5-dev-macos-x86_64
+        ./premake5-dev-macos-x86_64
+
+  test-linux-x86_64:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        submodules: true
+
+    - name: Download premake
+      id: premake
+      uses: mercury233/action-cache-download-file@v1.0.0
+      with:
+        url: https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz
+        filename: premake5.tar.gz
+    
+    - name: Extract premake
+      run: |
+        tar xf ${{ steps.premake.outputs.filepath }}
+        chmod +x ./premake5
+
+    - name: Test official premake
+      run: |
+        ./premake5
+
+    - name: Test patched premake
+      run: |
+        chmod +x ./premake5-dev-linux-x86_64
+        ./premake5-dev-linux-x86_64
+
+  test-linux-arm:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        submodules: true
+
+    - name: Test patched premake
+      run: |
+        chmod +x ./premake5-dev-linux-arm
+        ./premake5-dev-linux-arm
+
+  test-windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2025
+          - windows-11-arm
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        submodules: true
+
+    - name: Download premake
+      id: premake
+      uses: mercury233/action-cache-download-file@v1.0.0
+      with:
+        url: https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-windows.zip
+        filename: premake5.zip
+
+    - name: Extract premake
+      run: |
+        7z x ${{ steps.premake.outputs.filepath }}
+
+    - name: Test official premake
+      run: |
+        .\premake5.exe
+    
+    - name: Test patched premake
+      run: |
+        .\premake5-dev-windows-win32.exe
