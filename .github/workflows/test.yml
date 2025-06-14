@@ -24,19 +24,36 @@ jobs:
         fetch-depth: 1
         submodules: true
 
-    - name: Download premake
-      id: premake
+    - name: Download premake beta6
+      id: premake-beta6
+      uses: mercury233/action-cache-download-file@v1.0.0
+      with:
+        url: https://github.com/premake/premake-core/releases/download/v5.0.0-beta6/premake-5.0.0-beta6-macosx.tar.gz
+        filename: premake5-beta6.tar.gz
+
+    - name: Extract premake beta6
+      run: |
+        tar xf ${{ steps.premake-beta6.outputs.filepath }}
+        chmod +x ./premake5
+      
+    - name: Test official premake beta6
+      continue-on-error: true
+      run: |
+        ./premake5
+
+    - name: Download premake beta7
+      id: premake-beta7
       uses: mercury233/action-cache-download-file@v1.0.0
       with:
         url: https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-macosx.tar.gz
-        filename: premake5.tar.gz
+        filename: premake5-beta7.tar.gz
 
-    - name: Extract premake
+    - name: Extract premake beta7
       run: |
-        tar xf ${{ steps.premake.outputs.filepath }}
+        tar xf ${{ steps.premake-beta7.outputs.filepath }}
         chmod +x ./premake5
 
-    - name: Test official premake
+    - name: Test official premake beta7
       continue-on-error: true
       run: |
         ./premake5
