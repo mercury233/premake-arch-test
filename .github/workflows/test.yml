@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - name: Checkout repository with submodules
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Test premake5-dev-macos-x86_64
       continue-on-error: true
@@ -35,6 +35,13 @@ jobs:
         lipo -archs ./premake5-dev-macos-arm64
         ./premake5-dev-macos-arm64
 
+    - name: Test premake5-dev-macos-universal
+      continue-on-error: true
+      run: |
+        chmod +x ./premake5-dev-macos-universal
+        lipo -archs ./premake5-dev-macos-universal
+        ./premake5-dev-macos-universal
+
   test-linux:
     strategy:
       fail-fast: false
@@ -47,7 +54,7 @@ jobs:
 
     steps:
     - name: Checkout repository with submodules
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 1
         submodules: true
@@ -78,7 +85,7 @@ jobs:
 
     steps:
     - name: Checkout repository with submodules
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 1
         submodules: true
