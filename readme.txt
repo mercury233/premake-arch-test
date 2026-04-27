@@ -1,1 +1,1 @@
-premake with the patch in https://github.com/premake/premake-core/pull/2468#issuecomment-2888556890 , by tritao.
+premake with the os.hostarch() patch in https://github.com/mercury233/premake-core/actions/runs/24993551999

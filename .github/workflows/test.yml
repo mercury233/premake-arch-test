@@ -12,8 +12,36 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-13
+          - macos-15-intel
           - macos-15
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v4
+
+    - name: Test premake5-dev-macos-x86_64
+      continue-on-error: true
+      run: |
+        chmod +x ./premake5-dev-macos-x86_64
+        lipo -archs ./premake5-dev-macos-x86_64
+        ./premake5-dev-macos-x86_64
+
+    - name: Test premake5-dev-macos-arm64
+      continue-on-error: true
+      run: |
+        chmod +x ./premake5-dev-macos-arm64
+        lipo -archs ./premake5-dev-macos-arm64
+        ./premake5-dev-macos-arm64
+
+  test-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
 
     runs-on: ${{ matrix.os }}
 
@@ -24,96 +52,19 @@ jobs:
         fetch-depth: 1
         submodules: true
 
-    - name: Download premake beta6
-      id: premake-beta6
-      uses: mercury233/action-cache-download-file@v1.0.0
-      with:
-        url: https://github.com/premake/premake-core/releases/download/v5.0.0-beta6/premake-5.0.0-beta6-macosx.tar.gz
-        filename: premake5-beta6.tar.gz
-
-    - name: Extract premake beta6
-      run: |
-        tar xf ${{ steps.premake-beta6.outputs.filepath }}
-        chmod +x ./premake5
-      
-    - name: Test official premake beta6
+    - name: Test premake5-dev-linux-x86_64
       continue-on-error: true
       run: |
-        lipo -archs ./premake5
-        ./premake5
-
-    - name: Download premake beta7
-      id: premake-beta7
-      uses: mercury233/action-cache-download-file@v1.0.0
-      with:
-        url: https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-macosx.tar.gz
-        filename: premake5-beta7.tar.gz
-
-    - name: Extract premake beta7
-      run: |
-        tar xf ${{ steps.premake-beta7.outputs.filepath }}
-        chmod +x ./premake5
-
-    - name: Test official premake beta7
-      continue-on-error: true
-      run: |
-        lipo -archs ./premake5
-        ./premake5
-
-    - name: Test patched premake
-      continue-on-error: true
-      run: |
-        chmod +x ./premake5-dev-macos-x86_64
-        ./premake5-dev-macos-x86_64
-
-  test-linux-x86_64:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository with submodules
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 1
-        submodules: true
-
-    - name: Download premake
-      id: premake
-      uses: mercury233/action-cache-download-file@v1.0.0
-      with:
-        url: https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz
-        filename: premake5.tar.gz
-    
-    - name: Extract premake
-      run: |
-        tar xf ${{ steps.premake.outputs.filepath }}
-        chmod +x ./premake5
-
-    - name: Test official premake
-      continue-on-error: true
-      run: |
-        ./premake5
-
-    - name: Test patched premake
-      continue-on-error: true
-      run: |
+        file ./premake5-dev-linux-x86_64
         chmod +x ./premake5-dev-linux-x86_64
         ./premake5-dev-linux-x86_64
 
-  test-linux-arm:
-    runs-on: ubuntu-24.04-arm
-
-    steps:
-    - name: Checkout repository with submodules
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 1
-        submodules: true
-
-    - name: Test patched premake
+    - name: Test premake5-dev-linux-arm64
       continue-on-error: true
       run: |
-        chmod +x ./premake5-dev-linux-arm
-        ./premake5-dev-linux-arm
+        file ./premake5-dev-linux-arm64
+        chmod +x ./premake5-dev-linux-arm64
+        ./premake5-dev-linux-arm64
 
   test-windows:
     strategy:
@@ -132,23 +83,23 @@ jobs:
         fetch-depth: 1
         submodules: true
 
-    - name: Download premake
-      id: premake
-      uses: mercury233/action-cache-download-file@v1.0.0
-      with:
-        url: https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-windows.zip
-        filename: premake5.zip
-
-    - name: Extract premake
-      run: |
-        7z x ${{ steps.premake.outputs.filepath }}
-
-    - name: Test official premake
+    - name: Test premake5-dev-windows-win32
       continue-on-error: true
+      shell: bash
       run: |
-        .\premake5.exe
-    
-    - name: Test patched premake
+        file ./premake5-dev-windows-win32.exe
+        ./premake5-dev-windows-win32.exe
+
+    - name: Test premake5-dev-windows-x86_64
       continue-on-error: true
+      shell: bash
       run: |
-        .\premake5-dev-windows-win32.exe
+        file ./premake5-dev-windows-x86_64.exe
+        ./premake5-dev-windows-x86_64.exe
+
+    - name: Test premake5-dev-windows-arm64
+      continue-on-error: true
+      shell: bash
+      run: |
+        file ./premake5-dev-windows-arm64.exe
+        ./premake5-dev-windows-arm64.exe
